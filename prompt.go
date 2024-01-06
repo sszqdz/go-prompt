@@ -2,7 +2,6 @@ package prompt
 
 import (
 	"bytes"
-	"os"
 	"time"
 
 	"github.com/c-bata/go-prompt/internal/debug"
@@ -108,10 +107,11 @@ func (p *Prompt) Run() {
 		case w := <-winSizeCh:
 			p.renderer.UpdateWinSize(w)
 			p.renderer.Render(p.buf, p.prevText, p.completion)
-		case code := <-exitCh:
+		case <-exitCh:
 			p.renderer.BreakLine(p.buf)
 			p.tearDown()
-			os.Exit(code)
+			// os.Exit(code)
+			return
 		default:
 			time.Sleep(10 * time.Millisecond)
 		}
